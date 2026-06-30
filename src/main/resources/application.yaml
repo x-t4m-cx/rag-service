@@ -1,3 +1,86 @@
 spring:
   application:
     name: rag-service
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/rag}
+    username: ${DATABASE_USERNAME:rag_user}
+    password: ${DATABASE_PASSWORD:rag_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+
+  ai:
+    openai:
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${LLM_MODEL:gpt-3.5-turbo}
+          temperature: 0.7
+      embedding:
+        options:
+          model: ${EMBEDDING_MODEL:text-embedding-ada-002}
+
+    vector-store:
+      qdrant:
+        host: ${QDRANT_HOST:localhost}
+        port: ${QDRANT_PORT:6333}
+        collection-name: ${QDRANT_COLLECTION:rag_documents}
+        api-key: ${QDRANT_API_KEY:}
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+
+logging:
+  level:
+    com.mtabakov.rag: ${LOG_LEVEL:INFO}
+    org.springframework.ai: DEBUG
+
+# RAG Configuration
+rag:
+  chunk:
+    size: ${RAG_CHUNK_SIZE:1000}
+    overlap: ${RAG_CHUNK_OVERLAP:200}
+  retrieval:
+    top-k: ${RAG_TOP_K:5}
+    similarity-threshold: ${RAG_SIMILARITY_THRESHOLD:0.7}
+  ollama:
+    api-key: ${OLLAMA_API_KEY:}
+    base-url: ${OLLAMA_BASE_URL:https://ollama.com}
+    embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    llm-model: ${OLLAMA_LLM_MODEL:glm-4.7}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
