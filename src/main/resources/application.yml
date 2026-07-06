@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rag-service
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:https://ollama.com}
+      api-key: ${OLLAMA_API_KEY:}
+      chat:
+        options:
+          model: glm-4.7
+      embedding:
+        options:
+          model: nomic-embed-text
+    vectorstore:
+      qdrant:
+        host: ${QDRANT_HOST:localhost}
+        port: ${QDRANT_PORT:6334}
+        collection-name: rag-documents
+        initialize-schema: true
+
+rag:
+  chunk-size: 1000
+  overlap: 200
+  top-k: 5
+  similarity-threshold: 0.7
+  async:
+    core-pool-size: 4
+    max-pool-size: 8
+    queue-capacity: 100
+  web-search:
+    enabled: ${WEBSEARCH_ENABLED:false}
+    base-url: ${SEARXNG_BASE_URL:http://localhost:8081}
+    max-results: 5
+
+openai:
+  api:
+    default-model: glm-4.7
+    model-owner: ollama
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.rag: INFO
+    org.springframework.ai: INFO

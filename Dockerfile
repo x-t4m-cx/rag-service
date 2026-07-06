@@ -1,16 +1,15 @@
-FROM openjdk:17-jdk-slim AS build
+FROM eclipse-temurin:21-jdk AS build
 
 WORKDIR /app
 
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
 
-COPY src src
-RUN ./mvnw package -DskipTests
+COPY src ./src
+RUN ./mvnw -q -DskipTests package
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
@@ -18,4 +17,4 @@ COPY --from=build /app/target/rag-service-*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

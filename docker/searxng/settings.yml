@@ -1,0 +1,13 @@
+use_default_settings: true
+
+server:
+  secret_key: "rag-searxng-dev-secret-change-in-production"
+  limiter: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "en"
+  formats:
+    - html
+    - json
