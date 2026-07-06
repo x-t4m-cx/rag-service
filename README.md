@@ -789,13 +789,9 @@ pom.xml
 
 ### Планируется
 
-- [ ] Миграция сборки на Gradle Kotlin DSL (указано в ТЗ, текущая сборка — Maven)
 - [ ] Персистентное хранение метаданных документов (сейчас in-memory; данные теряются при перезапуске)
 - [ ] Поддержка дополнительных параметров OpenAI API (`temperature`, `max_tokens`, `top_p`)
 - [ ] Spring Boot Actuator (health checks, metrics) для production-мониторинга
 
 ---
 
-## Лицензия
-
-MIT
